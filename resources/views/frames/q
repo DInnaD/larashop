@@ -1,0 +1,44 @@
+1.+ traits
+2.- search
+3.+ checkbox: getValueIsHardCover() //5 bookmodel or toogle
+4.+ purchaseable...
+5.+ mailgun register
+6.! $touches update with relatives
+7. book to magazine like
+8.- 22. book model    protected $attributes = ['avaliableDiscont', 'newPrice', 'isPausedPublished', 'isSoftDeleted',
+       //avaliableDiscont' => false, 'status_draft' => 10
+    ];
+    //=>false instead toggleStatusDraft
+    public function getIsPausedPublishedAttribute()// 141 model
+    9.- book controll 100 restore()
+    10. bookmodel without controller to view getAvaliableDiscontAttributes()
+    11. -getStatusDraft()//?????BEFORE PAYABLE ACTION ON PURCHASE VIRT FIELD?????//
+    Book,Magaz -> morphItem -> Purchase
+    12. $currentDiscont  - rerecord or $newcurrentDiscont as rule
+
+    13. trait share without in the model?
+     protected $casts = [
+        'avaliableDiscont' => 'boolean',//$newCurrentDiscont
+        'newPrice' => 'float',// realField price
+        'currentDiscont' => 'integer',
+       
+        //'date'
+    ];// 'isPausedPublished' => 'boolean', 'isSoftDeleted' => 'boolean', 
+    //protected $status_draft = 'status_draft';//likes status to , message
+    protected $attributes = ['avaliableDiscont', 'newPrice',
+    'currentDiscont',
+       //'isPausedPublished' => true, 'isSoftDeleted', 
+    ];
+    protected $touches = ['purchase','user',
+       // 'status_draft' => 10
+    ];
+    //protected $appends = ['isPausedPublished'];//public
+    protected $appends = ['avaliableDiscont', 'newPrice', 'currentDiscont', ];// 'isPausedPublished', 'isSoftDeleted', 
+
+      //if as discontlogic&traitSHARE:
+
+      13.a. newPrice from trait and from modelMagazine - who willbe stronger?
+
+      14. imageable morph ortrait?
+
+

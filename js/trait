@@ -1,0 +1,476 @@
+
+
+***********************************************************************************************************Пример #1 Пример использования трейта //diff pearent
+<?php
+trait ezcReflectionReturnInfo {
+    function getReturnType() { /*1*/ }
+    function getReturnDescription() { /*2*/ }
+}
+
+class ezcReflectionMethod extends ReflectionMethod {
+    use ezcReflectionReturnInfo;
+    /* .?.. */*****************************************************************************************************************?
+}
+
+class ezcReflectionFunction extends ReflectionFunction {
+    use ezcReflectionReturnInfo;
+    /* .?.. */*****************************************************************************************************************?
+}
+?trait ToggleDiscont {
+    public function toggleDiscontId() {
+        function toggleDiscontId();        
+            echo 'Hello ';//for extended for traited
+        }
+    public function toggleDiscontSubscription() {
+        function toggleDiscontSubscription();
+            echo 'Hello ';//for extended->only{Magazine} for traited
+        }
+}
+
+?class Magazine extends Item {//abstr? extends:from traited or from abstracted better? with trueLikeHello falselikeNoHello
+    use ToggleDiscont;
+    /* ... */
+}
+?class Book extends Item {//abstr? extends:from traited or from abstracted better? with trueLikeHello falselikeNoHello
+    use ToggleDiscont;
+    /* ... */
+}
+?class Purchase extends Model {
+    use ToggleDiscont;
+    /* ... */
+    public function toggleDiscontId() {
+        function toggleDiscontId();        
+            echo 'Hello ';//for extended for traited
+        }
+    public function toggleDiscontSubscription() {
+        function toggleDiscontSubscription();
+            echo 'Hello ';//for extended->only{Magazine} for traited
+        }
+}
+?class User extends Model {
+    use ToggleDiscont;
+    /* ... */
+    public function toggleDiscontId() {
+        function toggleDiscontId();        
+            echo 'Hello ';//for extended for traited
+        }
+    public function toggleDiscontSubscription() {
+        function toggleDiscontSubscription();
+            echo 'Hello ';//for extended->only{Magazine} for traited
+        }
+}
+?>
+Приоритет ¶
+
+Наследуемый член из базового класса переопределяется членом, находящимся в трейте. Порядок приоритета следующий: члены из текущего класса переопределяют методы в трейте, которые в свою очередь переопределяют унаследованные методы.
+
+?**********************************************************************Пример #2 Пример приоритета старшинства //the same parent abstract Item is it trueable??
+
+Наследуемый метод от базового класса переопределяется методом, вставленным в MyHelloWorld из трейта SayWorld. Поведение такое же как и для методов, определенных в классе MyHelloWorld. Порядок приоритета такой: методы из текущего класса переопределяют методы трейта, которые в свою очередь переопределяют методы из базового класса.
+<?php
+class Base {
+    public function sayHello() {
+        echo 'Hello ';
+    }
+}
+
+trait SayWorld {
+    public function sayHello() {
+        parent::sayHello();
+        echo 'World!';
+    }
+}
+
+class MyHelloWorld extends Base {
+    use SayWorld;
+}
+
+$o = new MyHelloWorld();
+$o->sayHello();
+?>
+
+
+<?php
+???class abstract Item {*******************************************************************************************?//FROMABSTRACT??????#4 - 216
+    public function toggleDiscontId() {
+        echo 'Hello ';//for extended for traited
+    }
+    public function toggleDiscontSubscription() {
+        echo 'Hello ';//for extended->only{Magazine}, for traited
+    }
+    public function toggleDiscontGlobal() {
+        echo 'Hello ';*******************************************************************************?//for extended
+    }
+}
+
+trait ToggleDiscont {
+    public function toggleDiscontId() {
+        parent::toggleDiscontId();        
+            echo 'Hello ';*******************************************************************************?//for extended for traited
+        }
+    public function toggleDiscontSubscription() {
+        parent::toggleDiscontSubscription();
+            echo 'Hello ';********************************************************************************?//for extended->only{Magazine} for traited
+        }
+    
+    
+}
+
+class Magazine extends Item {**********************************************************************************************?//??abstract extends?
+    //use ToggleDiscont; for user, for purchase 
+}
+
+$magazine = new Magazine();
+$magazine->toggleDiscontSubscription();
+$magazine->toggleDiscontId();
+$magazine->toggleDiscontGlobal ();
+
+class Book extends Item {**********************************************************************************************?//??abstract extends?
+    //use ToggleDiscont; for user, for purchase 
+}
+
+$book = new Book();
+$book->toggleDiscontId();
+$book->toggleDiscontGlobal ();
+?>
+Результат выполнения данного примера:
+
+Hello World!
+<?php 
+namespace App;
+
+trait Owned
+//::select('author', app('Author')->pluck...
+{
+public function owned($query){
+return $query->where('created_by', \Auth::user()->id);
+}
+ 
+}
+************************************************************************************************Пример #3 Пример альтернативного порядка приоритета
+<?php
+trait HelloWorld {
+    public function sayHello() {
+        echo 'Hello World!';
+    }
+}
+
+class TheWorldIsNotEnough {
+    use HelloWorld;
+    public function sayHello() {
+        echo 'Hello Universe!';
+    }
+}
+
+$o = new TheWorldIsNotEnough();
+$o->sayHello();
+?>
+<?php
+trait ToggleDiscont {
+    public function toggleDiscontId() {
+        echo 'true';
+    }
+    public function toggleDiscontSubscription() {
+        echo 'true';
+    }
+}
+
+class User or Purchase{//not.abstract Item {
+    use ToggleDiscont;
+    public function toggleDiscontId() {
+        //Item.echo 'FromfalseToTrue.AfterRegistration';
+?        echo 'false.afterFirstPurchased';//if (toggler false-true) {return true-false}
+    }
+    public function toggleDiscontSubscription() {
+        //Item.echo 'FromfalseToTrue.AfterHandle';
+?        echo 'false.AfterHandle';//if (toggler false-true) {return true-false}//use or no use
+    }
+?}Hello Universe!false//************************************************************************************? if (toggler true-false) {return false-true}
+
+$u or p = new User or Purchase();
+$u or p->toggleDiscontId();
+$u or p->toggleDiscontSubscription();
+?>
+Результат выполнения данного примера:
+
+Hello Universe!false
+
+Несколько трейтов ¶
+
+Несколько трейтов могут быть вставлены в класс путем их перечисления в директиве use, разделяя запятыми.
+
+**************************************************************************************************************Пример #4 Пример использования нескольких трейтов
+<?php
+trait toggleDiscontId {
+    public function toggleDiscontId() {
+        echo 'false'.AfterPurchased;
+    }
+}
+
+trait toggleDiscontSubscriber {
+    public function toggleDiscontSubscriber() {
+        echo 'true'.afterHandle;//use or no use
+    }
+}
+
+?class abstract Item {***************************************************************************************?//TOABSTRACT#2 - 94
+    use toggleDiscontSubscriber, toggleDiscontId;
+    public function sayExclamationMark() {
+        echo '!';
+    }
+}
+
+$o = new MyHelloWorld();
+**********************************************************************************************************?//??????$o->toggleDiscontId();
+**********************************************************************************************************?//??????$o->toggleDiscontSubscriber();
+$o->sayExclamationMark();
+?>
+
+Результат выполнения данного примера:
+false true!
+Hello World!
+
+************************************************************************************************************************!INSTEADOF INSTEADOF+AS Разрешение конфликтов ¶
+
+Если !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!два трейта вставляют метод с одним и тем же именем, это приводит к фатальной ошибке в случае, если конфликт явно не разрешен.
+
+Для разрешения конфликтов именования между трейтами, используемыми в одном и том же классе, необходимо использовать оператор insteadof для того, чтобы точно выбрать один из конфликтующих методов.
+
+Так как предыдущий оператор позволяет только исключать методы, оператор as может быть использован для включения одного из конфликтующих методов под другим именем. Обратите внимание, что оператор as не переименовывает метод и не влияет на какой-либо другой метод.
+
+****************************************************************************************************!STRICT COMPARISON BEFORE 7.0**********Пример #5 Пример разрешения конфликтов 
+
+В этом примере Talker использует трейты A и B. Так как в A и B есть конфликтующие методы, он определяет использовать вариант smallTalk из трейта B, а вариант bigTalk - из трейта A.
+
+Класс Aliased_Talker применяет оператор as чтобы получить возможность использовать имплементацию bigTalk из B под дополнительным псевдонимом talk.
+<?php
+trait A {
+    public function smallTalk() {-
+        echo 'a';
+    }
+    public function bigTalk() {+
+        echo 'A';
+    }
+}
+
+trait B {
+    public function smallTalk() {+
+        echo 'b';
+    }
+    public function bigTalk() {+
+        echo 'B';
+    }
+}
+
+class Talker {
+    use A, B {
+        B::smallTalk insteadof A;//b
+        A::bigTalk insteadof B;//A
+    }
+}
+
+class Aliased_Talker {
+    use A, B {
+        B::smallTalk insteadof A;//b
+        A::bigTalk insteadof B;//A
+        B::bigTalk as talk;//B
+    }
+}
+?>
+<?php
+trait A {
+    public function toggleDiscontId() {-
+        echo 'true';//byRegisterFunc
+    }
+    public function toggleDiscontSubs() {+
+        echo 'TRUE';//byHandle
+    }
+}
+
+trait B {
+    public function toggleDiscontId() {+
+        echo 'false';//ifHandleNotPurchase - for example
+    }
+    public function toggleDiscontSubs() {+
+        echo 'False';//byHandle
+    }
+}
+
+class Purchase {
+    use A, B {
+        B::toggleDiscontId insteadof A;//b
+        A::toggleDiscontSubs insteadof B;//A
+    }
+}
+
+class User {
+    use A, B {
+        B::toggleDiscontId insteadof A;//b
+        A::toggleDiscontSubs insteadof B;//A handle+ user dont want to use discId
+        B::toggleDiscontSubs as talk;//B
+    }
+}
+?>
+
+    Замечание:
+
+*********************************************************************************************************? for each kind of traits? or only for #5 Conflicts?!!!!!!!!!!!!!!!!!!До PHP 7.0 определение свойства в классе с таким же именем, что и в трейте, приводило к ошибке уровня E_STRICT!!!!!!!!!!, даже если определение полностью совпадало (та же область видимости и такое же начальное значение).
+
+Изменение видимости метода ¶
+
+Используя синтаксис оператора as можно также настроить видимость метода в использующем трейт классе.
+
+******************************************************************************************************Пример #6 Пример изменения видимости метода
+<?php
+trait HelloWorld {
+    public function sayHello() {
+        echo 'Hello World!';
+    }
+}
+
+// Изменение видимости метода sayHello
+class MyClass1 {
+    use HelloWorld { sayHello as protected; }!!!!!!!!!!!!!!!!!!!!!!!!!11ADD PROTEC TO EXAMPLE TO SHOP
+}
+
+// Создание псевдонима метода с измененной видимостью
+// видимость sayHello не изменилась
+class MyClass2 {
+    use HelloWorld { sayHello as private myPrivateHello; }!!!!!!!!!!!!!!!!!!!!1 ADD PRIVATA TO EXAMPLE TO SHOP
+}
+?>
+Трейты, состоящие из трейтов ¶
+
+Аналогично тому, как классы могут использовать трейты, также и трейты могут использовать другие трейты. Используя один или более трейтов в определении другого трейта, он может частично или полностью состоять из членов, определенных в этих трейтах.
+
+*****************************************************************************************************Пример #7 Пример трейтов, составленных из трейтов
+<?php
+trait Hello {||TRAIT SUBS
+    public function sayHello() {
+        echo 'Hello ';
+    }
+}
+
+trait World {||TRAIT FOR BOOK
+    public function sayWorld() {
+        echo 'World!';
+    }
+}
+
+trait HelloWorld {||TRAIT FOR MAGAZINE 
+    use Hello||FOR BOOK, World||FOR bOOK;
+}
+
+class MyHelloWorld||MAGAZINE {
+    use HelloWorld||MAGAZINE;
+}
+
+$o = new MyHelloWorld||MAGAZINE();
+$o->sayHello||TRAIT FOR BOOK();
+$o->sayWorld||TRAIT SUBS();
+?>
+
+Результат выполнения данного примера:
+
+Hello World!
+
+*******************************************************************************************************************************Абстрактные члены трейтов ¶
+
+Трейты поддерживают использование абстрактных методов для того, чтобы установить требования к использующему классу.
+Предостережение
+
+Конкретный класс исполняет эти требования путем определения конкретного метода с тем же именем; при этом !!!!!!!!!!!!сигнатура метода может отличаться.
+
+******************************************************************************************************Пример #8 Требования трейта при помощи абстрактных методов
+<?php
+trait Hello {
+    public function sayHelloWorld() {
+        echo 'Hello'.$this->getWorld();**********************************************************************?$THIS WHOM?
+    }
+ ?   abstract public function getWorld();********************************************************************?//ONLY METHOD ABSTR WITHOUT ABSTRACT CLASS?
+}
+
+class MyHelloWorld {
+    private $world;
+    use Hello;
+    public function getWorld() {
+        return $this->world;
+    }
+    public function setWorld($val) {
+        $this->world = $val;
+    }
+}
+?>
+*********************************************************************************************************************************Статические члены трейта ¶
+
+На статические переменные можно ссылаться внутри методов трейта, но нельзя определить статические переменные в самом трейте. Тем не менее, трейт может описывать статические методы для демонстрации класса.
+
+*********************************************************************************************************************************Пример #9 Статические переменные
+<?php
+trait Counter {
+    public function inc() {
+        static $c = 0;**********************************************************************************************************?STATIC==SELF!=const CHANGE?
+        $c = $c + 1;
+        echo "$c\n";
+    }
+}
+
+class C1 {
+    use Counter;//SELF
+}
+
+class C2 {
+    use Counter;//SELF
+}
+
+$o = new C1(); $o->inc(); // echo 1
+$p = new C2(); $p->inc(); // echo 1
+?>
+
+*******************************************************************************************************************::********Пример #10 Статические методы
+<?php
+trait StaticExample {
+    public static function doSomething() {//SELF
+        return 'Что-либо делаем';
+    }
+}
+
+class Example {
+    use StaticExample;
+}
+
+Example::doSomething();
+?>
+Свойства ¶
+
+**************************************************************************************************************************Трейты могут также определять свойства.
+
+**************************************************************************************************************************Пример #11 Определение свойств+!!!!!!!
+<?php
+trait PropertiesTrait {
+    public $x = 1;///THE SAME THESAME
+}
+
+class PropertiesExample {
+    use PropertiesTrait;
+}
+
+$example = new PropertiesExample;
+$example->x;//THE SAME THE SAME
+?>
+
+Если трейт определяет свойство, то класс !!!!!!!!!!!!!!!!не может определить свойство с таким же именем, !!!!!!!!!!!!!!!!!!!!!!!!!!!!кроме случаев полного совпадения (те же начальное значение и модификатор видимости), иначе будет сгенерирована фатальная ошибка. До PHP 7.0.0 при определении свойства в классе, полностью идентичное свойству трейта, выдавалась ошибка уровня E_STRICT.
+
+*****************************************************************************************************************************Пример #12 Разрешение конфликтов
+<?php
+trait PropertiesTrait {
+    public $same = true;
+    public $different = false;
+}
+
+class PropertiesExample {
+    use PropertiesTrait;
+    public $same = true; // Допустимо с PHP 7.0.0. В более ранних версиях ошибка уровня E_STRICT
+    public $different = true; // Фатальная ошибка FALSE
+}
+?>
